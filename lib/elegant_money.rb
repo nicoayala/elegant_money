@@ -11,7 +11,7 @@ class ElegantMoney
     @configuration ||= Configuration.new
   end
 
-  def initialize(amount, currency = 'EUR')
+  def initialize(amount, currency = default_currency)
     @amount = BigDecimal.new(amount.to_s)
     @currency = currency
   end
@@ -54,14 +54,10 @@ class ElegantMoney
     return build(amount, currency) if currency == new_currency
 
     conversion = conversion_for(new_currency)
-    new_amount = if currency == default_currency
-      amount * conversion
-    else
-      default_amount = amount / conversion_for(currency)
-      default_amount * conversion
-    end
+    conversion_amount = amount
+    conversion_amount /= conversion_for(currency) unless currency == default_currency
 
-    build(new_amount, new_currency)
+    build(conversion_amount * conversion, new_currency)
   end
 
   def infinite?
@@ -87,11 +83,15 @@ class ElegantMoney
 
   def conversion_for(key)
     return 1 if key == default_currency
-    ElegantMoney.configuration.conversions.fetch(key)
+    configuration.conversions.fetch(key)
   end
 
   def default_currency
-    ElegantMoney.configuration.default_currency
+    configuration.default_currency
+  end
+
+  def configuration
+    ElegantMoney.configuration
   end
 end
 

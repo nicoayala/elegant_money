@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name          = "elegant_money"
-  spec.version       = "0.1.0"
-  spec.authors       = ["Nico"]
+  spec.version       = "0.1.1"
+  spec.authors       = ["Nico Ayala"]
   spec.email         = ["ncls.ayala@gmail.com"]
 
   spec.summary       = %q{Elegant and simple implementation to handle money in different currencies}
