@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    elegant_money (0.1.0)
+    elegant_money (0.1.2)
 
 GEM
   remote: https://rubygems.org/
