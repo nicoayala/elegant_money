@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2018-01-13
+### Changes
+- Restrict the amount input type to numeric types (Fixes BigDecimal error in ruby 2.4 and 2.5).
+
 ## [0.1.2] - 2018-01-13
 ### Changes
 - Add rubocop to the default rake tasks

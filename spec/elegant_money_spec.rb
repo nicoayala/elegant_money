@@ -11,10 +11,12 @@ RSpec.describe ElegantMoney do
   describe "#inspect" do
     it "returns a string representation" do
       expect(eur(9.98).inspect).to eql("9.98 EUR")
+      expect(eur(20).inspect).to eql("20.00 EUR")
     end
 
-    it "returns a string representation when amount is not a number" do
-      expect(eur("asd").inspect).to eql("0.00 EUR")
+    it "raises an error when the amount type is not numeric" do
+      expect { eur("asd") }.to raise_error(ArgumentError)
+      expect { eur(nil) }.to raise_error(ArgumentError)
     end
   end
 

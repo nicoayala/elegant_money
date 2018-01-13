@@ -13,7 +13,7 @@ class ElegantMoney
   end
 
   def initialize(amount, currency = default_currency)
-    @amount = BigDecimal.new(amount.to_s)
+    @amount = BigDecimal.new(parse_amount(amount))
     @currency = currency
   end
 
@@ -66,6 +66,11 @@ class ElegantMoney
   end
 
   private
+
+  def parse_amount(amount)
+    raise ArgumentError, "invalid value: #{amount}" unless amount.is_a?(Numeric)
+    amount.to_s
+  end
 
   def operate_with_normalized_currency(other)
     result = yield amount_with_normalized_currency(other)
