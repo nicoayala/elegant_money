@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/nicoayala/elegant_money"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files lib *.md LICENSE.txt`.split("\n")
+  spec.files         = `git ls-files lib spec *.md`.split("\n")
+  spec.files        += %w[LICENSE.txt elegant_money.gemspec]
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 2.1.2"
