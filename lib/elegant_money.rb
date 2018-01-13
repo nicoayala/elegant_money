@@ -27,23 +27,27 @@ class ElegantMoney
   end
 
   def +(other)
-    other_amount = amount_with_normalized_currency(other)
-    build(amount + other_amount, currency)
+    operate_with_normalized_currency(other) do |other_amount|
+      amount + other_amount
+    end
   end
 
   def -(other)
-    other_amount = amount_with_normalized_currency(other)
-    build(amount - other_amount, currency)
+    operate_with_normalized_currency(other) do |other_amount|
+      amount - other_amount
+    end
   end
 
   def *(other)
-    other_amount = amount_with_normalized_currency(other)
-    build(amount * other_amount, currency)
+    operate_with_normalized_currency(other) do |other_amount|
+      amount * other_amount
+    end
   end
 
   def /(other)
-    other_amount = amount_with_normalized_currency(other)
-    build(amount / other_amount, currency)
+    operate_with_normalized_currency(other) do |other_amount|
+      amount / other_amount
+    end
   end
 
   def convert_to(new_currency)
@@ -65,6 +69,11 @@ class ElegantMoney
   end
 
   private
+
+  def operate_with_normalized_currency(other)
+    result = yield amount_with_normalized_currency(other)
+    build(result, currency)
+  end
 
   def amount_with_normalized_currency(other)
     return other.convert_to(currency).amount if other.is_a?(ElegantMoney)
