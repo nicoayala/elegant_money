@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Gem::Specification.new do |spec|
   spec.name          = "elegant_money"
   spec.version       = "0.1.2"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ElegantMoney.configure do |config|
   config.default_currency = "EUR"
   config.conversions = {
