@@ -3,6 +3,14 @@ class ElegantMoney
 
   attr_reader :amount, :currency
 
+  def self.configure
+    yield configuration
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
   def initialize(amount, currency = 'EUR')
     @amount = BigDecimal.new(amount.to_s)
     @currency = currency
@@ -14,30 +22,28 @@ class ElegantMoney
   alias :to_s :inspect
 
   def <=>(other)
-    amount <=> build(other, currency).amount
+    other_amount = amount_with_normalized_currency(other)
+    amount.round(2) <=> other_amount.round(2)
   end
 
   def +(other)
-    # TODO: check currency!
-    # using_currency(other) do |money|
-    #   amount + money.amount
-    # end
-    build(amount + build(other, currency).amount, currency)
+    other_amount = amount_with_normalized_currency(other)
+    build(amount + other_amount, currency)
   end
 
   def -(other)
-    # TODO: check currency!
-    build(amount - build(other, currency).amount, currency)
+    other_amount = amount_with_normalized_currency(other)
+    build(amount - other_amount, currency)
   end
 
   def *(other)
-    # TODO: check currency!
-    build(amount * build(other, currency).amount, currency)
+    other_amount = amount_with_normalized_currency(other)
+    build(amount * other_amount, currency)
   end
 
   def /(other)
-    # TODO: check currency!
-    build(amount / build(other, currency).amount, currency)
+    other_amount = amount_with_normalized_currency(other)
+    build(amount / other_amount, currency)
   end
 
   def convert_to(new_currency)
@@ -48,7 +54,7 @@ class ElegantMoney
       amount * conversion
     else
       default_amount = amount / conversion_for(currency)
-      (default_amount * conversion).round(2)
+      default_amount * conversion
     end
 
     build(new_amount, new_currency)
@@ -60,27 +66,25 @@ class ElegantMoney
 
   private
 
+  def amount_with_normalized_currency(other)
+    return other.convert_to(currency).amount if other.is_a?(ElegantMoney)
+    return BigDecimal.new(other.to_s) if other.is_a?(Float)
+    other
+  end
+
   def build(amount, currency)
     ElegantMoney.new(amount, currency)
   end
 
-  def using_currency(value)
-    yield build(value, currency)
-  end
-
   def conversion_for(key)
     return 1 if key == default_currency
-
-    @conversions ||= {
-      "USD" => BigDecimal("1.22"),
-      "ARS" => BigDecimal("22.77")
-    }
-    @conversions.fetch(key)
+    ElegantMoney.configuration.conversions.fetch(key)
   end
 
   def default_currency
-    "EUR"
+    ElegantMoney.configuration.default_currency
   end
 end
 
 require "bigdecimal"
+require "elegant_money/configuration"
